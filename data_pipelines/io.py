@@ -2,11 +2,13 @@ from pyspark.sql import SparkSession
 import databricks.koalas as ks
 
 class DBConnectionSpark():
+  "db_type: options are 'sqlserver' etc. to general db uri"
   def __init__(self, cloud:bool, on_prem:bool, pyspark:bool, pyodbc:bool, db_type:str=None, db_ip:str=None, db_name:str=None, user_name:str=None, password:str=None):
     if pyspark and on_prem:
       assert ((db_type is not None) and (db_ip is not None) and (db_name is not None) and (user_name is not None) and (password is not None))
       self.on_prem = on_prem
       self.pyspark = pyspark
+      db_type = (''.join(db_type.split())).lower()
       self.jdbc_uri = "jdbc:{0}://{1};databaseName={2};user={3};password={4}".format(db_type, db_ip, db_name, user_name, password) #jdbc:sqlserver://localhost;user=MyUserName;password=*****;
       #appName = "pyspark connection"
       #builder = SparkSession.builder.appName(appName)
