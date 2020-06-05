@@ -3,6 +3,25 @@ import databricks.koalas as ks
 from azure.common.client_factory import get_client_from_cli_profile
 from azure.mgmt.resource import ResourceManagementClient
 from azure.mgmt.sql import SqlManagementClient
+import env
+
+class DBConnectionServer():
+  def __init__(self, connection_library:str):
+    "Args:"
+    "  connection_library: pyodbc or pyspark"
+    "Returns:"
+    "Raises:"
+    if connection_library == "pyodbc":
+      ""
+
+class DBConnectionCloud():
+  def __init__(self, which_cloud:str, env=None):
+    "Args:"
+    "  which_cloud: 'azure' or 'gcp' or 'aws'"
+    if which_cloud == 'azure':    
+      account_name = env.get_azure_account_name(env)
+
+
 
 class DBConnectionSpark():
   "db_type: options are 'sqlserver' etc. to general db uri"
