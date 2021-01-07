@@ -12,7 +12,7 @@ DATABASE = "MY_DATABASE"
 UID = "MY_UID"
 PWD = "MY_PWD"
 WINDOWS_AUTHENTICATION = "TRUSTED_CONNECTION" #yes or otherwise
-CONN_STR = "MY_DB_CONNECTION_STRING"
+CONNECTION_STRING = "MY_DB_CONNECTION_STRING"
 CONNECTION_METHOD = "MY_DB_CONNECTION_METHOD" #pyodbc, pyspark, etc.
 
 def set_env(KEY, value, env=None):
@@ -76,5 +76,5 @@ def set_connection_string(env=None, default=None):
   if conn_method == "pyodbc":
     if windows_conn == "yes":
       v = 'Driver={0};Server={1};Database={2};Trusted_Connection={3};'.format(driver, server, db, windows_conn)
-  set_env(KEY=CONNECTION_METHOD, value=v, env=env)
+  set_env(KEY=CONNECTION_STRING, value=v, env=env)
     
