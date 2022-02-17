@@ -12,17 +12,21 @@ AZURE_CONNECTION_STRING = "AZURE_CONNECTION_STRING"
 AZURE_CONTAINER_NAME = "AZURE_CONTAINER_NAME"
 AZURE_STORAGE_CONNECTION_STRING = "AZURE_STORAGE_CONNECTION_STRING"
 
-def load_env_file(filename:str=".env"):
-  with open(Path('.')/filename, 'r') as freader:
-    env_dict = dict(tuple([line.strip('\n').split('=')[0], "=".join(line.strip('\n').split('=')[1:])]) for line in freader.readlines() if not line.startswith("#"))
-  return(env_dict)
-
 def set_app_envs(envs:dict):
   os.environ.update(envs)
 
-def get_azure_storage_connection_string() -> str:
-  if env.AZURE_STORAGE_CONNECTION_STRING:
-    return(os.getenv(env.AZURE_STORAGE_CONNECTION_STRING))
+def load_env_file(filepath:str=".env"):
+  """default environment file is .env in current working directory"""
+  with open(filepath, 'r') as freader:
+    env_dict = dict(tuple([line.strip('\n').split('=')[0], "=".join(line.strip('\n').split('=')[1:])]) for line in freader.readlines() if not line.startswith("#"))
+    set_app_envs(env_dict)
+  return(env_dict)
+
+
+
+def get_azure_storage_connection_string(env=None) -> str:
+  if env is None: env = os.envrion
+  return(env.get(AZURE_STORAGE_CONNECTION_STRING))
 
 def set_azure_account_name(name:str, env=None):
   if env is None:
