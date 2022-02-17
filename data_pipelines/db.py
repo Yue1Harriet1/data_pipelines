@@ -69,6 +69,13 @@ class MyAzureBlobStorage():
 					blob.upload(d)
 				temp.close()
 
+
+def upload_azure_blob_storage(data, container_name:str=None, azure_credentials:Dict[str, str]=None):
+	blobs = MyAzureBlobStorage(azure_credentials)
+	if not container_name: container_name="data"
+	blobs.upload(data, container_name)
+
+
 # create a azure blob container
 def connect_to_blob_service_client():
 	"""
