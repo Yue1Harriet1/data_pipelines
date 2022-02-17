@@ -14,7 +14,7 @@ class MyAzureBlobStorage():
 	An Azure Blob Storage to store my data: text or ginary data	
 	parent class definition is at: https://github.com/Azure/azure-sdk-for-python/blob/a5ea4bf7d0decafbe355467ddb0bdd334b9f953b/sdk/storage/azure-storage-blob/azure/storage/blob/_blob_service_client.py#L26
 	"""
-	def __init__(self, credentials:Dict[str, str]):
+	def __init__(self, credentials:Dict[str, str]=None):
 		"""
 		:param dict credentials: can supply coneection_string as the key or other credentials:
 			if connection_string is specified, overrides all other parameters to create a BlobServiceClient to connect to the blob storage
@@ -22,6 +22,9 @@ class MyAzureBlobStorage():
 		"""
 		if "connection_string" in credentials.keys():
 			self.blob_service_client = BlobServiceClient.from_connection_string(credentials["connection_string"])
+		else:
+			connection_str = env.get_azure_storage_connection_string().strip('"')
+			self.blob_service_client = BlobServiceClient.from_connection_string(connection_str)
 
 	def list_container_names(self):
 		container_list = [c.name for c in self.blob_service_client.list_containers()]
