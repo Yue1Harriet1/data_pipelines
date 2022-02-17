@@ -4,7 +4,6 @@ Getters and Setters
 
 import os
 from pathlib import Path
-import env
 
 AZURE_ACCOUNT_NAME = "AZURE_ACCOUNT_NAME"
 AZURE_ACCOUNT_KEY = "AZURE_ACCOUNT_KEY"
