@@ -2,7 +2,6 @@ import os, uuid
 import env
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 from typing import Dict
-import tempfile
 import pandas as pd
 
 #===============================================#
@@ -20,8 +19,8 @@ class MyAzureBlobStorage():
 			if connection_string is specified, overrides all other parameters to create a BlobServiceClient to connect to the blob storage
 			example: credentials = {"connection_string": "XXXXXXX"}
 		"""
-		if "connection_string" in credentials.keys():
-			self.blob_service_client = BlobServiceClient.from_connection_string(credentials["connection_string"])
+		if credentials is not None:
+			if "connection_string" in credentials.keys(): self.blob_service_client = BlobServiceClient.from_connection_string(credentials["connection_string"])
 		else:
 			connection_str = env.get_azure_storage_connection_string().strip('"')
 			self.blob_service_client = BlobServiceClient.from_connection_string(connection_str)
@@ -55,19 +54,26 @@ class MyAzureBlobStorage():
 
 	def upload(self, data, container_name:str):
 		c = self.get_container(container_name)
-		if os.path.isfile(data):
+		if isinstance(data, str) or isinstance(data, bytes) or isinstance(data, os.PathLike) or isinstance(data, int):
 			blob = self.blob_service_client.get_blob_client(container=container_name, blob=data)
 			with open(data, "rb") as d:
-				blob.upload(d)
-		elif isinstance(x, pd.DataFrame):
-			with tempfile.NamedTemporaryFile(delete=False) as temp:
-				file = temp.name+'.csv'
-				df.to_csv(file)
-				blob = self.blob_service_client.get_blob_client(container=container_name, blob=file)
+				blob.upload_blob(d, overwrite=True)
+		elif isinstance(data, pd.DataFrame):
+			file = 'data_all.csv'
+			data.to_csv(file)
+			blob = self.blob_service_client.get_blob_client(container=container_name, blob=file)
 
-				with open(file, "rb") as d:
-					blob.upload(d)
-				temp.close()
+			with open(file, "rb") as d:
+				blob.upload_blob(d, overwrite=True)
+
+			os.remove(file)
+
+	def download_to_dataframe(self, blob_name:str, container_name:str):
+		blob = self.blob_service_client.get_blob_client(container=container_name, blob=blob_name)
+		with open(os.getcwd()+"\\data.csv", "wb") as download_file:
+			download_file.write(blob.download_blob().readall())
+
+		return(pd.read_csv(os.getcwd()+"\\data.csv"))	
 
 
 def upload_azure_blob_storage(data, container_name:str=None, azure_credentials:Dict[str, str]=None):
@@ -75,6 +81,11 @@ def upload_azure_blob_storage(data, container_name:str=None, azure_credentials:D
 	if not container_name: container_name="data"
 	blobs.upload(data, container_name)
 
+def read_dataframe_azure_blob(blob_name:str, container_name:str, azure_credentials:Dict[str, str]=None):
+	blob = MyAzureBlobStorage(azure_credentials)
+	df = blob.download_to_dataframe(blob_name, container_name)
+	os.remove(os.getcwd()+"\\data.csv")
+	return(df)
 
 # create a azure blob container
 def connect_to_blob_service_client():
