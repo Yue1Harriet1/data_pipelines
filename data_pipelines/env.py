@@ -11,20 +11,22 @@ AZURE_CONNECTION_STRING = "AZURE_CONNECTION_STRING"
 AZURE_CONTAINER_NAME = "AZURE_CONTAINER_NAME"
 AZURE_STORAGE_CONNECTION_STRING = "AZURE_STORAGE_CONNECTION_STRING"
 
+"""In the envrionment variable file, provide the above parameters, at least AZURE_STORAGE_CONNECTION_STRING"""
+
 def set_app_envs(envs:dict):
   os.environ.update(envs)
 
 def load_env_file(filepath:str=".env"):
   """default environment file is .env in current working directory"""
   with open(filepath, 'r') as freader:
-    env_dict = dict(tuple([line.strip('\n').split('=')[0], "=".join(line.strip('\n').split('=')[1:])]) for line in freader.readlines() if not line.startswith("#"))
+    env_dict = dict(tuple([line.strip('\n').split('=')[0].strip(), "=".join(line.strip('\n').split('=')[1:])]) for line in freader.readlines() if not line.startswith("#"))
     set_app_envs(env_dict)
   return(env_dict)
 
 
 
 def get_azure_storage_connection_string(env=None) -> str:
-  if env is None: env = os.envrion
+  if env is None: env = os.environ
   return(env.get(AZURE_STORAGE_CONNECTION_STRING))
 
 def set_azure_account_name(name:str, env=None):
@@ -60,8 +62,7 @@ def set_azure_connection_string(env=None):
   except AssertionError: print("need to set azure account name and key")
 
 def get_azure_connection_string(env=None):
-  if env is None:
-    env = os.environ
+  if env is None: env = os.environ
   return(env[AZURE_CONNECTION_STRING])
   
 def set_azure_container_name(container:str, env=None):
