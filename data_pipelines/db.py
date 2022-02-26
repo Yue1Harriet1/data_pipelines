@@ -1,5 +1,5 @@
 import os, uuid
-import env
+from . import env
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 from typing import Dict
 import pandas as pd
