@@ -19,7 +19,7 @@ def set_app_envs(envs:dict):
 def load_env_file(filepath:str=".env"):
   """default environment file is .env in current working directory"""
   with open(filepath, 'r') as freader:
-    env_dict = dict(tuple([line.strip('\n').split('=')[0].strip(), "=".join(line.strip('\n').split('=')[1:])]) for line in freader.readlines() if not line.startswith("#"))
+    env_dict = dict(tuple([line.strip('\n').split('=')[0].strip(), "=".join(line.strip('\n').split('=')[1:]).strip()]) for line in freader.readlines() if not line.startswith("#"))
     set_app_envs(env_dict)
   return(env_dict)
 
