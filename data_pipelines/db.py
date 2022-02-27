@@ -83,7 +83,8 @@ def upload_azure_blob_storage(data, container_name:str=None, azure_credentials:D
 
 def read_dataframe_azure_blob(blob_name:str, container_name:str, azure_credentials:Dict[str, str]=None):
 	blob = MyAzureBlobStorage(azure_credentials)
-	df = blob.download_to_dataframe(blob_name, container_name)
+	try: df = blob.download_to_dataframe(blob_name, container_name)
+	except ResourceNotFoundError: df=None
 	os.remove(os.getcwd()+"\\data.csv")
 	return(df)
 
