@@ -1,6 +1,7 @@
 import os, uuid
 from . import env
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
+from azure.core.exceptions import ResourceNotFoundError
 from typing import Dict
 import pandas as pd
 
