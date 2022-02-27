@@ -61,7 +61,7 @@ class MyAzureBlobStorage():
 				blob.upload_blob(d, overwrite=True)
 		elif isinstance(data, pd.DataFrame):
 			file = 'data_all.csv'
-			data.to_csv(file)
+			data.to_csv(file, index=False)
 			blob = self.blob_service_client.get_blob_client(container=container_name, blob=file)
 
 			with open(file, "rb") as d:
