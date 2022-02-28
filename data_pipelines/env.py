@@ -79,6 +79,10 @@ def get_azure_blob_name(BLOB_ENV, env=None):
   if env is None: env=os.environ
   return(env[BLOB_ENV])
 
+def get_env_by_name(name, env=None):
+  if env is None: env=os.environ
+  return(env[name])
+
 def load_env_from_file():
     with open(Path('.')/'.env', 'r') as fh:
         vars_dict = dict(
