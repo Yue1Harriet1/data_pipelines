@@ -75,6 +75,12 @@ class MyAzureBlobStorage():
 			download_file.write(blob.download_blob().readall())
 
 		return(pd.read_csv(os.getcwd()+"\\data.csv"))	
+	
+	def download_blob(self, blob_name:str, container_name:str):
+		blob = self.blob_service_client.get_blob_client(container=container_name, blob=blob_name)
+		with open(os.getcwd()+"\\"+blob_name, "wb") as download_file:
+			download_file.write(blob.download_blob().readall())
+		return(os.getcwd()+"\\"+blob_name)
 
 
 def upload_azure_blob_storage(data, container_name:str=None, azure_credentials:Dict[str, str]=None):
