@@ -95,6 +95,12 @@ def read_dataframe_azure_blob(blob_name:str, container_name:str, azure_credentia
 	os.remove(os.getcwd()+"\\data.csv")
 	return(df)
 
+def read_png_azure_blob(blob_name:str, container_name:str, azure_credentials:Dict[str, str]=None):
+	blob = MyAzureBlobStorage(azure_credentials)
+	try: png = blob.download_blob(blob_name, container_name)
+	except ResourceNotFoundError: png = None
+	return(png)
+
 # create a azure blob container
 def connect_to_blob_service_client():
 	"""
