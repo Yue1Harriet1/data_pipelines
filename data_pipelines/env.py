@@ -75,7 +75,7 @@ def get_azure_container_name(env=None):
     env = os.environ
   return(env[AZURE_CONTAINER_NAME])
 
-def get_azure_blob_name(BLOB_ENV, env=None)
+def get_azure_blob_name(BLOB_ENV, env=None):
   if env is None: env=os.environ
   return(env[BLOB_ENV])
 
